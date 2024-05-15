@@ -1,0 +1,170 @@
+service: aws-lambda-emsdm-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-west-2
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:*
+          Resource: 
+            - arn:aws:dynamodb:us-west-2:767397679120:table/*
+
+functions:
+  test:
+    handler: src/hello.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+  createCourse:
+    handler: src/course/addCourse.addCourse
+    events:
+      - httpApi:
+          path: /course
+          method: post
+  
+  getCourses:
+    handler: src/course/getCourses.getCourses
+    events:
+      - httpApi:
+          path: /course/all
+          method: get
+  
+  getCourse:
+    handler: src/course/getCourse.getCourse
+    events:
+      - httpApi:
+          path: /course/find/{id}
+          method: get
+
+  updateCourse:
+    handler: src/course/updateCourse.updateCourse
+    events:
+      - httpApi:
+          path: /course/find/{id}
+          method: put
+
+  deleteCourse:
+    handler: src/course/deleteCourse.deleteCourse
+    events:
+      - httpApi:
+          path: /course/find/{id}
+          method: delete
+
+  loginUser:
+    handler: src/user/loginUser.loginUser
+    events:
+      - httpApi:
+          path: /user/login
+          method: post
+
+  getUserRol:
+    handler: src/user/getUserRol.getUserRol
+    events:
+      - httpApi:
+          path: /user/{rol}
+          method: get
+
+  getStudentsByCourse:
+    handler: src/user/getStudentsByCourse.getStudentsByCourse
+    events:
+      - httpApi:
+          path: /user/course/{courseId}
+          method: get
+
+  getCountUsers:
+    handler: src/user/getCountUsers.getCountUsers
+    events:
+      - httpApi:
+          path: /user/count
+          method: get
+  
+  addInstructorUser:
+    handler: src/user/addInstructorUser.addInstructorUser
+    events:
+      - httpApi:
+          path: /user/instructor
+          method: post
+  
+  addStudentUser:
+    handler: src/user/addStudentUser.addStudentUser
+    events:
+      - httpApi:
+          path: /user/student
+          method: post
+
+resources:
+  Resources:
+    CoursesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: CoursesTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: promotion
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: promotionIndex
+            KeySchema:
+              - AttributeName: promotion
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          
+    
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UsersTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: rol
+            AttributeType: S
+          - AttributeName: course_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: emailIndex
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: rolIndex
+            KeySchema:
+              - AttributeName: rol
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: courseIdIndex
+            KeySchema:
+              - AttributeName: course_id
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+plugins:
+  - serverless-dotenv-plugin
+
+custom:
+  dotenv:
+    basePath: ./
+
+       
