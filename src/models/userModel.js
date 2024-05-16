@@ -1,47 +1,57 @@
 const mongoose = require( "mongoose" );
 
 const UserSchema = new mongoose.Schema({
-  name: {
-    type: Schema.Types.String,
+  fullName: {
+    type: mongoose.Schema.Types.String,
     required: true,
     index: true,
   },
-  url: {
-    type: Schema.Types.String,
-    required: true,
-    index: true,
+  phone: {
+    type: mongoose.Schema.Types.String,
   },
-  types: [
-    {
-      type: Schema.Types.String,
-    },
-  ],
-  currencies: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "currency",
-    },
-  ],
-  user: {
-    type: Schema.Types.ObjectId,
+  rol: {
+    type: mongoose.Schema.Types.String,
+  },
+  birthday: {
+    type: mongoose.Schema.Types.String,
+  },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "course",
+    required: false,
+  },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "user",
     required: false,
-    index: true,
+  },
+  document: {
+    type: mongoose.Schema.Types.String,
+    required: true,
+    unique: true
+  },
+  document_type: {
+    type: mongoose.Schema.Types.String,
+    required: true,
+  },
+  email: {
+    type: mongoose.Schema.Types.String,
+    required: true,
+    unique: true
   },
   created_at: {
-    type: Schema.Types.Date,
+    type: mongoose.Schema.Types.Date,
     default: Date.now,
   },
 });
 
 UserSchema.methods.toJSON = function () {
-  let report = this;
-  let reportObject = report.toObject();
-  // delete reportObject._id;
-  delete reportObject.__v;
-  return reportObject;
+  let user = this;
+  let userObject = user.toObject();
+  // delete userObject._id;
+  delete userObject.__v;
+  return userObject;
 };
 
-const Report = mongoose.model("report", UserSchema);
+module.exports = mongoose.model("user", UserSchema);
 
-export default Report;

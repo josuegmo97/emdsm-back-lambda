@@ -1,35 +1,26 @@
 
-const AWS = require('aws-sdk');
+const User = require('../models/userModel');
+const connectToDatabase = require('../../middleware/db');
 const jwt = require('jsonwebtoken');
 
 const loginUser = async (event) => {
 
   try {
-    const dynamoDB = new AWS.DynamoDB.DocumentClient();
     
-    const { email, photoUrl } = JSON.parse(event.body);
+    await connectToDatabase();
 
-    // get user by email
-    const params = {
-      TableName: 'UsersTable',
-      IndexName: 'emailIndex',
-      KeyConditionExpression: 'email = :email',
-      ExpressionAttributeValues: {
-        ':email': email
-      }
-    };
+    const { email } = JSON.parse(event.body);
 
-    const result = await dynamoDB.query(params).promise();
-    const Item = result.Items[0];
+    const query = await User.findOne({ email });
 
-    if(!Item) {
+    if(!query) {
       return {
         statusCode: 404,
         body: "Usuario no encontrado"
       };
     }
 
-    if(Item.rol !== 'admin' && Item.rol !== 'instructor') {
+    if(query.rol !== 'admin' && query.rol !== 'instructor') {
       return {
         statusCode: 403,
         body: "Usuario no autorizado"
@@ -37,8 +28,7 @@ const loginUser = async (event) => {
     }
 
     const user = {
-      ...Item,
-      photoUrl
+      ...query.toJSON(),
     }
 
     const token = jwt.sign(
@@ -53,6 +43,7 @@ const loginUser = async (event) => {
       body: JSON.stringify({user, token})
     };
   } catch (error) {
+
     return {
       statusCode: 400,
       body: "Login error"

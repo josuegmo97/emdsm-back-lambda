@@ -1,29 +1,26 @@
 
-const AWS = require('aws-sdk');
+const User = require('../models/userModel');
+const Course = require('../models/courseModel');
+const connectToDatabase = require('../../middleware/db');
 const { jwtMiddleware } = require('../../middleware/jwt');
 
 const getCountUsers = async (event) => {
 
   const jwtResult = await jwtMiddleware(event);
   if (jwtResult) { return jwtResult; }
-  
-  const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-  const users = await dynamoDB.scan({
-    TableName: 'UsersTable'
-  }).promise();
+  await connectToDatabase();
 
-  const courses = await dynamoDB.scan({
-    TableName: 'CoursesTable'
-  }).promise();
+  const users = await User.find();
+  const courses = await Course.find();
 
-  const intructors = users.Items.filter(user => user.rol === 'instructor');
-  const students = users.Items.filter(user => user.rol === 'student');
+  const intructors = users.filter(user => user.rol === 'instructor');
+  const students = users.filter(user => user.rol === 'student');
 
   const count = {
     instructors: intructors.length,
     students: students.length,
-    courses: courses.Items.length
+    courses: courses.length
   };
 
   return {

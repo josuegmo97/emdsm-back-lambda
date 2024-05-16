@@ -5,14 +5,8 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-west-2
-  iam:
-    role:
-      statements:
-        - Effect: "Allow"
-          Action:
-            - dynamodb:*
-          Resource: 
-            - arn:aws:dynamodb:us-west-2:767397679120:table/*
+  environment:
+    MONGO_URI: MONGO_URI="mongodb+srv://emdsm-user:emdsmjgmo@emdsm-db.pnszqsz.mongodb.net/"
 
 functions:
   test:
@@ -98,67 +92,6 @@ functions:
       - httpApi:
           path: /user/student
           method: post
-
-resources:
-  Resources:
-    CoursesTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: CoursesTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-          - AttributeName: promotion
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: promotionIndex
-            KeySchema:
-              - AttributeName: promotion
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-          
-    
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: UsersTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-          - AttributeName: email
-            AttributeType: S
-          - AttributeName: rol
-            AttributeType: S
-          - AttributeName: course_id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: emailIndex
-            KeySchema:
-              - AttributeName: email
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-          - IndexName: rolIndex
-            KeySchema:
-              - AttributeName: rol
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-          - IndexName: courseIdIndex
-            KeySchema:
-              - AttributeName: course_id
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
 
 plugins:
   - serverless-dotenv-plugin

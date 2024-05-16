@@ -1,6 +1,5 @@
-
-const { v4 } = require('uuid');
-const AWS = require('aws-sdk');
+const User = require('../models/userModel');
+const connectToDatabase = require('../../middleware/db');
 const { jwtMiddleware } = require('../../middleware/jwt');
 
 const addInstructorUser = async (event) => {
@@ -8,30 +7,24 @@ const addInstructorUser = async (event) => {
   const jwtResult = await jwtMiddleware(event, true);
   if (jwtResult) { return jwtResult; }
   
-  const dynamoDB = new AWS.DynamoDB.DocumentClient();
+  await connectToDatabase();
 
   const { fullName, email, phone, documentType, document, birthday  } = JSON.parse(event.body);
-  const created_at = new Date().toISOString();
-  const id = v4();
 
-  const newInstructor = {
-    id,
+  const query = {
     fullName,
     email,
     phone,
     document_type: documentType,
     document,
     birthday,
-    created_at,
     rol: 'instructor',
-    course_id: null,
-    created_by: event.user.id
+    course: null,
+    created_by: event.user._id
   };
 
-  await dynamoDB.put({
-    TableName: 'UsersTable',
-    Item: newInstructor
-  }).promise();
+  const newInstructor = new User(query);
+  await newInstructor.save();
 
   return {
     statusCode: 200,

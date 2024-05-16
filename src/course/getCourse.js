@@ -3,6 +3,7 @@ const { v4 } = require('uuid');
 const AWS = require('aws-sdk');
 const { jwtMiddleware } = require('../../middleware/jwt');
 
+// TODO: Deprecated
 const getCourse = async (event) => {
   
   const jwtResult = await jwtMiddleware(event);

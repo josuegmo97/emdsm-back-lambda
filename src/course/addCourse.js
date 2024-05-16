@@ -1,15 +1,12 @@
-
-const { v4 } = require('uuid');
-const AWS = require('aws-sdk');
+const Course = require('../models/courseModel');
+const connectToDatabase = require('../../middleware/db');
 const { jwtMiddleware } = require('../../middleware/jwt');
 
 const _setCourseType = (type) => {
-
-  switch (type) {
-    case '1':
+  const typeToNumber = parseInt(type);
+  switch (typeToNumber) {
     case 1:
       return 'Piloto Intermedio';
-    case '2':
     case 2:
       return 'Piloto Experto';
     default:
@@ -23,53 +20,36 @@ const addCourse = async (event) => {
     const jwtResult = await jwtMiddleware(event, true);
     if (jwtResult) { return jwtResult; }
     
-    const dynamoDB = new AWS.DynamoDB.DocumentClient();
+    await connectToDatabase();
 
     const { promotion, type } = JSON.parse(event.body);
 
-    const created_at = new Date().toISOString();
-    const id = v4();
+    const course = await Course.findOne({ promotion});
 
-    const params = {
-      TableName: 'CoursesTable',
-      IndexName: 'promotionIndex', // Nombre del índice secundario global
-      KeyConditionExpression: '#promotion = :promotionValue',
-      ExpressionAttributeNames: {
-        '#promotion': 'promotion' // Alias para el atributo promotion
-      },
-      ExpressionAttributeValues: {
-        ':promotionValue': promotion
-      }
-    };
-
-    const checkData = await dynamoDB.query(params).promise();
-
-    if (checkData.Count > 0) {
+    if (course) {
       return {
         statusCode: 400,
         body: `La promoción #${promotion} ya existe`
       };
     }
 
-    const newCourse = {
-      id,
+    const newCourseQuery = {
       promotion,
       type, // 1 - Intermedio 2 - Experto
       type_description: _setCourseType(type),
-      created_at,
-      created_by: event.user.id
+      created_by: event.user._id
     };
 
-    await dynamoDB.put({
-      TableName: 'CoursesTable',
-      Item: newCourse,
-    }).promise();
+    const newCourse = new Course(newCourseQuery);
+    await newCourse.save();
 
     return {
       statusCode: 200,
       body: JSON.stringify(newCourse)
     };
   } catch (error) {
+
+    console.log(error);
 
     return {
       statusCode: 400,
