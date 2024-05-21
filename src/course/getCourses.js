@@ -13,19 +13,20 @@ const getCourses = async (event) => {
       await connectToDatabase();
     
       const courses = await Course.find();
-    
-      // Obtener el conteo de usuarios para cada curso
-      const coursesWithUserCounts = await Promise.all(courses.map(async (course) => {
-        const userCount = await User.countDocuments({ course_id: course._id });
+
+      const users = await User.find({rol: 'student'});
+
+      const coursesWithStudents = courses.map(course => {
+        const students = users.filter(user => user.course.toString() === course._id.toString());
         return {
           ...course._doc,
-          students: userCount
+          students: students.length
         };
-      }));
+      });
     
       return {
         statusCode: 200,
-        body: JSON.stringify(coursesWithUserCounts)
+        body: JSON.stringify(coursesWithStudents)
       };
   } catch (error) {
     

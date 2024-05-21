@@ -16,7 +16,7 @@ const jwtMiddleware = async (event, isAdmin = false) => {
 
     if (isAdmin && event.user.rol !== 'admin') {
       return {
-        statusCode: 401,
+        statusCode: 400,
         body: "No autorizado",
       };
     }

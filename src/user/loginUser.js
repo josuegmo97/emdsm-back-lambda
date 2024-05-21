@@ -2,6 +2,7 @@
 const User = require('../models/userModel');
 const connectToDatabase = require('../../middleware/db');
 const jwt = require('jsonwebtoken');
+const argon2 = require('argon2');
 
 const loginUser = async (event) => {
 
@@ -9,21 +10,28 @@ const loginUser = async (event) => {
     
     await connectToDatabase();
 
-    const { email } = JSON.parse(event.body);
+    const { username, password } = JSON.parse(event.body);
 
-    const query = await User.findOne({ email });
+    const query = await User.findOne({ username });
 
     if(!query) {
       return {
-        statusCode: 404,
+        statusCode: 400,
         body: "Usuario no encontrado"
       };
     }
 
     if(query.rol !== 'admin' && query.rol !== 'instructor') {
       return {
-        statusCode: 403,
+        statusCode: 400,
         body: "Usuario no autorizado"
+      };
+    }
+
+    if (!(await argon2.verify(query.password, password))) {
+      return {
+      statusCode: 400,
+      body: "Contraseña incorrecta"
       };
     }
 
@@ -43,6 +51,9 @@ const loginUser = async (event) => {
       body: JSON.stringify({user, token})
     };
   } catch (error) {
+
+    console.log("Catch error");
+    console.log(error);
 
     return {
       statusCode: 400,

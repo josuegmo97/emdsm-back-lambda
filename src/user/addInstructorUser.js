@@ -10,18 +10,24 @@ const addInstructorUser = async (event) => {
     
     await connectToDatabase();
 
-    const { fullName, email, phone, documentType, document, birthday  } = JSON.parse(event.body);
+    const { fullName, phone, documentType, document, birthday  } = JSON.parse(event.body);
+
+    // Genera un número aleatorio entre 0 y 999999
+    let code = Math.floor(Math.random() * 1000000);
+      
+    // Asegura que el número tenga 6 dígitos, añadiendo ceros al principio si es necesario
+    let sixCode = code.toString().padStart(6, '0');
 
     const query = {
       fullName,
-      email,
       phone,
       document_type: documentType,
       document,
       birthday,
       rol: 'instructor',
       course: null,
-      created_by: event.user._id
+      created_by: event.user._id,
+      code: sixCode
     };
 
     const newInstructor = new User(query);

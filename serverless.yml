@@ -58,11 +58,25 @@ functions:
           path: /user/login
           method: post
 
+  registerUser:
+    handler: src/user/registerUser.registerUser
+    events:
+      - httpApi:
+          path: /user/register
+          method: post
+
   getUserRol:
     handler: src/user/getUserRol.getUserRol
     events:
       - httpApi:
           path: /user/{rol}
+          method: get
+
+  getPublicUser:
+    handler: src/user/getPublicUser.getPublicUser
+    events:
+      - httpApi:
+          path: /user/public/{mySearch}
           method: get
 
   getStudentsByCourse:

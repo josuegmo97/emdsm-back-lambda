@@ -26,18 +26,27 @@ const UserSchema = new mongoose.Schema({
     required: false,
   },
   document: {
-    type: mongoose.Schema.Types.String,
+    type: mongoose.Schema.Types.Number,
     required: true,
     unique: true
+  },
+  username: {
+    type: mongoose.Schema.Types.String,
+    required: false,
+    unique: true
+  },
+  password: {
+    type: mongoose.Schema.Types.String,
+    required: false,
+  },
+  code: {
+    type: mongoose.Schema.Types.String,
+    required: false,
+    default: null,
   },
   document_type: {
     type: mongoose.Schema.Types.String,
     required: true,
-  },
-  email: {
-    type: mongoose.Schema.Types.String,
-    required: true,
-    unique: true
   },
   created_at: {
     type: mongoose.Schema.Types.Date,

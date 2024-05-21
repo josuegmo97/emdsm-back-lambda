@@ -34,7 +34,6 @@ const getStudentsByCourse = async (event) => {
           $project: {
             _id: 1,
             fullName: 1,
-            email: 1,
             rol: 1,
             phone: 1,
             document_type: 1,

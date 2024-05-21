@@ -13,11 +13,19 @@ const addStudentUser = async (event) => {
 
     await connectToDatabase();
     
-    const { fullName, email, phone, documentType, document, birthday, courseId  } = JSON.parse(event.body);
+    const { fullName, phone, documentType, document, birthday, courseId  } = JSON.parse(event.body);
   
+    const checkUser = await User.findOne({document});
+
+    if(checkUser) {
+      return {
+        statusCode: 400,
+        body: 'El usuario ya existe'
+      };
+    }
+
     const query = {
       fullName,
-      email,
       phone,
       document_type: documentType,
       document,
@@ -50,7 +58,6 @@ const addStudentUser = async (event) => {
         $project: {
           _id: 1,
           fullName: 1,
-          email: 1,
           rol: 1,
           phone: 1,
           document_type: 1,
