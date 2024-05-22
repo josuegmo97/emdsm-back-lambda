@@ -3,6 +3,7 @@
     "argon2": "^0.40.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.5",
+    "serverless": "^4.0.23",
     "serverless-dotenv-plugin": "^6.0.0",
     "uuid": "^9.0.1"
   }

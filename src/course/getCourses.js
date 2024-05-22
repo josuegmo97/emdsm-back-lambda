@@ -12,7 +12,7 @@ const getCourses = async (event) => {
       
       await connectToDatabase();
     
-      const courses = await Course.find();
+      const courses = await Course.find().sort({"created_at": -1});
 
       const users = await User.find({rol: 'student'});
 

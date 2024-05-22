@@ -51,6 +51,9 @@ const getUserRol = async (event) => {
             _id: "$courseDetails._id"
           }
         }
+      },
+      {
+        $sort: { "created_at": -1 } // Ordenar por created_at en orden descendente
       }
     ]);
 

@@ -106,6 +106,20 @@ functions:
       - httpApi:
           path: /user/student
           method: post
+  
+  editUser:
+    handler: src/user/editUser.editUser
+    events:
+      - httpApi:
+          path: /user/update
+          method: post
+  
+  deleteUser:
+    handler: src/user/deleteUser.deleteUser
+    events:
+      - httpApi:
+          path: /user/delete
+          method: post
 
 plugins:
   - serverless-dotenv-plugin

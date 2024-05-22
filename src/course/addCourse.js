@@ -22,7 +22,7 @@ const addCourse = async (event) => {
     
     await connectToDatabase();
 
-    const { promotion, type } = JSON.parse(event.body);
+    const { promotion, type, description } = JSON.parse(event.body);
 
     const course = await Course.findOne({ promotion});
 
@@ -37,7 +37,8 @@ const addCourse = async (event) => {
       promotion,
       type, // 1 - Intermedio 2 - Experto
       type_description: _setCourseType(type),
-      created_by: event.user._id
+      created_by: event.user._id,
+      description
     };
 
     const newCourse = new Course(newCourseQuery);
