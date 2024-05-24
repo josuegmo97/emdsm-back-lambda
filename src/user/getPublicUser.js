@@ -10,7 +10,7 @@ const getPublicUser = async (event) => {
 
     const { mySearch } = event.pathParameters;
     
-    const user = await User.findOne({document: mySearch });
+    const user = await User.findOne({document: parseInt(mySearch)});
 
     if(!user) {
       return {

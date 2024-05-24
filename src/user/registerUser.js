@@ -39,7 +39,7 @@ const registerUser = async (event) => {
     
     query.username = username;
     query.password = await argon2.hash(password, {
-      timeCost: 1,       // Número mínimo de iteraciones
+      timeCost: 2,       // Número mínimo de iteraciones
       memoryCost: 2**12, // Memoria mínima en kibibytes (4,096 kibibytes)
       parallelism: 1,    // Número mínimo de hilos paralelos
       type: argon2.argon2id // Tipo de algoritmo recomendado por seguridad

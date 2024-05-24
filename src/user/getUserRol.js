@@ -38,6 +38,7 @@ const getUserRol = async (event) => {
           fullName: 1,
           rol: 1,
           phone: 1,
+          code: 1,
           document_type: 1,
           document: 1,
           birthday: 1,

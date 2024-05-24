@@ -11,6 +11,7 @@ provider:
 functions:
   test:
     handler: src/hello.handler
+    timeout: 15
     events:
       - httpApi:
           path: /
@@ -18,6 +19,7 @@ functions:
 
   createCourse:
     handler: src/course/addCourse.addCourse
+    timeout: 15
     events:
       - httpApi:
           path: /course
@@ -25,6 +27,7 @@ functions:
   
   getCourses:
     handler: src/course/getCourses.getCourses
+    timeout: 15
     events:
       - httpApi:
           path: /course/all
@@ -32,6 +35,7 @@ functions:
   
   getCourse:
     handler: src/course/getCourse.getCourse
+    timeout: 15
     events:
       - httpApi:
           path: /course/find/{id}
@@ -39,6 +43,7 @@ functions:
 
   updateCourse:
     handler: src/course/updateCourse.updateCourse
+    timeout: 15
     events:
       - httpApi:
           path: /course/find/{id}
@@ -46,6 +51,7 @@ functions:
 
   deleteCourse:
     handler: src/course/deleteCourse.deleteCourse
+    timeout: 15
     events:
       - httpApi:
           path: /course/find/{id}
@@ -53,6 +59,7 @@ functions:
 
   loginUser:
     handler: src/user/loginUser.loginUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/login
@@ -60,6 +67,7 @@ functions:
 
   registerUser:
     handler: src/user/registerUser.registerUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/register
@@ -67,6 +75,7 @@ functions:
 
   getUserRol:
     handler: src/user/getUserRol.getUserRol
+    timeout: 15
     events:
       - httpApi:
           path: /user/{rol}
@@ -74,6 +83,7 @@ functions:
 
   getPublicUser:
     handler: src/user/getPublicUser.getPublicUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/public/{mySearch}
@@ -81,6 +91,7 @@ functions:
 
   getStudentsByCourse:
     handler: src/user/getStudentsByCourse.getStudentsByCourse
+    timeout: 15
     events:
       - httpApi:
           path: /user/course/{courseId}
@@ -88,6 +99,7 @@ functions:
 
   getCountUsers:
     handler: src/user/getCountUsers.getCountUsers
+    timeout: 15
     events:
       - httpApi:
           path: /user/count
@@ -95,6 +107,7 @@ functions:
   
   addInstructorUser:
     handler: src/user/addInstructorUser.addInstructorUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/instructor
@@ -102,6 +115,7 @@ functions:
   
   addStudentUser:
     handler: src/user/addStudentUser.addStudentUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/student
@@ -109,6 +123,7 @@ functions:
   
   editUser:
     handler: src/user/editUser.editUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/update
@@ -116,6 +131,7 @@ functions:
   
   deleteUser:
     handler: src/user/deleteUser.deleteUser
+    timeout: 15
     events:
       - httpApi:
           path: /user/delete

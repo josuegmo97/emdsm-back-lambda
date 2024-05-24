@@ -15,8 +15,7 @@ const getStudentsByCourse = async (event) => {
       const { courseId } = event.pathParameters;
       
       const usersBelongCourse = await User.aggregate([
-        // { $match: { course: new mongoose.Types.ObjectId(courseId) } }, // Filtrar usuarios por rol
-        { $match: { course: new mongoose.Types.createFromTime(courseId) } }, // Filtrar usuarios por rol
+        { $match: { course: new mongoose.Types.ObjectId(courseId) } }, // Filtrar usuarios por rol
         {
           $lookup: {
             from: "courses", // El nombre de la colección de cursos en la base de datos
